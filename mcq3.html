@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Development MCQ Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 20px;
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            position: relative;
+        }
+        .timer-container {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #e9ecef;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .options label {
+            display: block;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: 1px solid #dee2e6;
+        }
+        .options label:hover {
+            background-color: #f0f0f0;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+        .correct {
+            background-color: #d4edda !important;
+            border-color: #c3e6cb !important;
+        }
+        .incorrect {
+            background-color: #f8d7da !important;
+            border-color: #f5c6cb !important;
+        }
+        .score-container {
+            text-align: center;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .progress {
+            height: 10px;
+            margin-bottom: 20px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .question-number {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        .category-badge {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+        .html-badge {
+            background-color: #e9f7fe;
+            color: #0366d6;
+        }
+        .css-badge {
+            background-color: #f0fff4;
+            color: #28a745;
+        }
+        .js-badge {
+            background-color: #fff5f5;
+            color: #d73a49;
+        }
+        .bootstrap-badge {
+            background-color: #f8f9fa;
+            color: #6f42c1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-container">
+            <div class="timer-container">
+                Time: <span id="timer">40:00</span>
+            </div>
+            
+            <h1 class="text-center mb-4">Web Development MCQ Quiz</h1>
+            <p class="text-center text-muted">Test your knowledge of HTML, CSS, JavaScript, and Bootstrap</p>
+            
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+            </div>
+            
+            <div id="quiz-content">
+                <!-- Questions will be inserted here by JavaScript -->
+            </div>
+            
+            <button id="submit-btn" class="btn btn-primary btn-submit">Submit Answers</button>
+            
+            <div id="score-container" class="score-container" style="display: none;">
+                <h3>Your Score: <span id="score">0</span>/40</h3>
+                <p id="result-message" class="result"></p>
+                <button id="restart-btn" class="btn btn-secondary mt-3">Restart Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MCQ Data
+        const mcqData = [
+            // HTML Questions (10)
+            {
+                question: "What does HTML stand for?",
+                options: [
+                    "Hyper Text Markup Language",
+                    "High Tech Modern Language",
+                    "Hyper Transfer Markup Language",
+                    "Home Tool Markup Language"
+                ],
+                correct: 0,
+                category: "HTML"
+            },
+            {
+                question: "Which tag is used to create a hyperlink in HTML?",
+                options: [
+                    "<link>",
+                    "<a>",
+                    "<href>",
+                    "<hyperlink>"
+                ],
+                correct: 1,
+                category: "HTML"
+            },
+            {
+                question: "What is the correct HTML element for the largest heading?",
+                options: [
+                    "<h6>",
+                    "<heading>",
+                    "<h1>",
+                    "<head>"
+                ],
+                correct: 2,
+                category: "HTML"
+            },
+            {
+                question: "Which HTML attribute is used to define inline styles?",
+                options: [
+                    "class",
+                    "font",
+                    "styles",
+                    "style"
+                ],
+                correct: 3,
+                category: "HTML"
+            },
+            {
+                question: "Which HTML element is used to specify a footer for a document or section?",
+                options: [
+                    "<footer>",
+                    "<bottom>",
+                    "<section>",
+                    "<div>"
+                ],
+                correct: 0,
+                category: "HTML"
+            },
+            {
+                question: "What is the purpose of the <head> element in HTML?",
+                options: [
+                    "To contain the main content of the page",
+                    "To define the header of the page",
+                    "To contain metadata about the document",
+                    "To create a heading for the page"
+                ],
+                correct: 2,
+                category: "HTML"
+            },
+            {
+                question: "Which HTML element is used to display a scalar measurement within a range?",
+                options: [
+                    "<gauge>",
+                    "<range>",
+                    "<meter>",
+                    "<measure>"
+                ],
+                correct: 2,
+                category: "HTML"
+            },
+            {
+                question: "Which HTML5 element is used for drawing graphics on the fly?",
+                options: [
+                    "<graphic>",
+                    "<canvas>",
+                    "<draw>",
+                    "<svg>"
+                ],
+                correct: 1,
+                category: "HTML"
+            },
+            {
+                question: "Which attribute is used to provide a unique name for an HTML element?",
+                options: [
+                    "class",
+                    "id",
+                    "name",
+                    "element"
+                ],
+                correct: 1,
+                category: "HTML"
+            },
+            {
+                question: "Which HTML element is used to define important text?",
+                options: [
+                    "<important>",
+                    "<b>",
+                    "<strong>",
+                    "<i>"
+                ],
+                correct: 2,
+                category: "HTML"
+            },
+            
+            // CSS Questions (10)
+            {
+                question: "What does CSS stand for?",
+                options: [
+                    "Computer Style Sheets",
+                    "Creative Style System",
+                    "Cascading Style Sheets",
+                    "Colorful Style Sheets"
+                ],
+                correct: 2,
+                category: "CSS"
+            },
+            {
+                question: "Which CSS property is used to change the text color of an element?",
+                options: [
+                    "text-color",
+                    "font-color",
+                    "color",
+                    "text-style"
+                ],
+                correct: 2,
+                category: "CSS"
+            },
+            {
+                question: "Which CSS property controls the text size?",
+                options: [
+                    "text-style",
+                    "font-size",
+                    "text-size",
+                    "font-style"
+                ],
+                correct: 1,
+                category: "CSS"
+            },
+            {
+                question: "How do you make each word in a text start with a capital letter?",
+                options: [
+                    "text-transform: capitalize",
+                    "text-transform: uppercase",
+                    "text-style: capital",
+                    "You can't do that with CSS"
+                ],
+                correct: 0,
+                category: "CSS"
+            },
+            {
+                question: "Which property is used to change the background color?",
+                options: [
+                    "color",
+                    "bgcolor",
+                    "background-color",
+                    "bg-color"
+                ],
+                correct: 2,
+                category: "CSS"
+            },
+            {
+                question: "How do you select an element with id 'demo' in CSS?",
+                options: [
+                    ".demo",
+                    "#demo",
+                    "demo",
+                    "*demo"
+                ],
+                correct: 1,
+                category: "CSS"
+            },
+            {
+                question: "Which property is used to change the font of an element?",
+                options: [
+                    "font-family",
+                    "font-style",
+                    "text-font",
+                    "font"
+                ],
+                correct: 0,
+                category: "CSS"
+            },
+            {
+                question: "How do you make a list that lists its items with squares?",
+                options: [
+                    "list-style-type: square",
+                    "list: square",
+                    "list-type: square",
+                    "list-style: square"
+                ],
+                correct: 0,
+                category: "CSS"
+            },
+            {
+                question: "Which CSS property is used to specify the space between the elements?",
+                options: [
+                    "padding",
+                    "margin",
+                    "spacing",
+                    "border-spacing"
+                ],
+                correct: 1,
+                category: "CSS"
+            },
+            {
+                question: "How do you select all p elements inside a div element?",
+                options: [
+                    "div.p",
+                    "div p",
+                    "div + p",
+                    "div > p"
+                ],
+                correct: 1,
+                category: "CSS"
+            },
+            
+            // JavaScript Questions (10)
+            {
+                question: "Which of the following is a JavaScript data type?",
+                options: [
+                    "Number",
+                    "String",
+                    "Boolean",
+                    "All of the above"
+                ],
+                correct: 3,
+                category: "JavaScript"
+            },
+            {
+                question: "How do you create a function in JavaScript?",
+                options: [
+                    "function myFunction()",
+                    "function:myFunction()",
+                    "function = myFunction()",
+                    "create myFunction()"
+                ],
+                correct: 0,
+                category: "JavaScript"
+            },
+            {
+                question: "How to write an IF statement in JavaScript?",
+                options: [
+                    "if i = 5 then",
+                    "if (i == 5)",
+                    "if i = 5",
+                    "if i == 5 then"
+                ],
+                correct: 1,
+                category: "JavaScript"
+            },
+            {
+                question: "How does a WHILE loop start?",
+                options: [
+                    "while (i <= 10)",
+                    "while i = 1 to 10",
+                    "while (i <= 10; i++)",
+                    "while i <= 10"
+                ],
+                correct: 0,
+                category: "JavaScript"
+            },
+            {
+                question: "How can you add a comment in JavaScript?",
+                options: [
+                    "// This is a comment",
+                    "<!-- This is a comment -->",
+                    "' This is a comment",
+                    "* This is a comment"
+                ],
+                correct: 0,
+                category: "JavaScript"
+            },
+            {
+                question: "Which operator is used to assign a value to a variable?",
+                options: [
+                    "-",
+                    "*",
+                    "=",
+                    "x"
+                ],
+                correct: 2,
+                category: "JavaScript"
+            },
+            {
+                question: "What will the following code return: Boolean(10 > 9)",
+                options: [
+                    "true",
+                    "false",
+                    "NaN",
+                    "undefined"
+                ],
+                correct: 0,
+                category: "JavaScript"
+            },
+            {
+                question: "Which method can be used to convert a string to uppercase in JavaScript?",
+                options: [
+                    "toUpperCase()",
+                    "toUpper()",
+                    "changeCase(upper)",
+                    "upperCase()"
+                ],
+                correct: 0,
+                category: "JavaScript"
+            },
+            {
+                question: "How do you round the number 7.25 to the nearest integer?",
+                options: [
+                    "Math.round(7.25)",
+                    "round(7.25)",
+                    "Math.rnd(7.25)",
+                    "rnd(7.25)"
+                ],
+                correct: 0,
+                category: "JavaScript"
+            },
+            {
+                question: "Which event occurs when the user clicks on an HTML element?",
+                options: [
+                    "onchange",
+                    "onclick",
+                    "onmouseclick",
+                    "onmouseover"
+                ],
+                correct: 1,
+                category: "JavaScript"
+            },
+            
+            // Bootstrap Questions (10)
+            {
+                question: "What is Bootstrap?",
+                options: [
+                    "A programming language",
+                    "A CSS framework",
+                    "A JavaScript library",
+                    "A database system"
+                ],
+                correct: 1,
+                category: "Bootstrap"
+            },
+            {
+                question: "Which class in Bootstrap is used to create a button?",
+                options: [
+                    ".button",
+                    ".btn",
+                    ".btn-primary",
+                    ".button-primary"
+                ],
+                correct: 1,
+                category: "Bootstrap"
+            },
+            {
+                question: "What does the Bootstrap grid system use?",
+                options: [
+                    "Tables",
+                    "Divs with classes",
+                    "Flexbox",
+                    "CSS Grid"
+                ],
+                correct: 2,
+                category: "Bootstrap"
+            },
+            {
+                question: "Which class is used to create a black navigation bar in Bootstrap?",
+                options: [
+                    ".navbar-black",
+                    ".navbar-dark",
+                    ".navbar-inverse",
+                    ".navbar-black"
+                ],
+                correct: 1,
+                category: "Bootstrap"
+            },
+            {
+                question: "Which class adds a fixed width to a container in Bootstrap?",
+                options: [
+                    ".container",
+                    ".container-fluid",
+                    ".container-fixed",
+                    ".container-static"
+                ],
+                correct: 0,
+                category: "Bootstrap"
+            },
+            {
+                question: "Which class is used to create a dropdown menu in Bootstrap?",
+                options: [
+                    ".dropdown",
+                    ".dropmenu",
+                    ".dropdown-menu",
+                    ".menu-dropdown"
+                ],
+                correct: 0,
+                category: "Bootstrap"
+            },
+            {
+                question: "Which class is used to create a jumbotron in Bootstrap?",
+                options: [
+                    ".jumbotron",
+                    ".hero",
+                    ".big-banner",
+                    ".large-header"
+                ],
+                correct: 0,
+                category: "Bootstrap"
+            },
+            {
+                question: "Which class is used to create a badge in Bootstrap?",
+                options: [
+                    ".badge",
+                    ".label",
+                    ".tag",
+                    ".mark"
+                ],
+                correct: 0,
+                category: "Bootstrap"
+            },
+            {
+                question: "Which class is used to create a card in Bootstrap?",
+                options: [
+                    ".panel",
+                    ".card",
+                    ".box",
+                    ".container"
+                ],
+                correct: 1,
+                category: "Bootstrap"
+            },
+            {
+                question: "Which class is used to create a responsive image in Bootstrap?",
+                options: [
+                    ".img-responsive",
+                    ".responsive-img",
+                    ".img-fluid",
+                    ".fluid-img"
+                ],
+                correct: 2,
+                category: "Bootstrap"
+            }
+        ];
+
+        // DOM Elements
+        const quizContent = document.getElementById('quiz-content');
+        const submitBtn = document.getElementById('submit-btn');
+        const scoreContainer = document.getElementById('score-container');
+        const scoreElement = document.getElementById('score');
+        const resultMessage = document.getElementById('result-message');
+        const restartBtn = document.getElementById('restart-btn');
+        const progressBar = document.querySelector('.progress-bar');
+        const timerElement = document.getElementById('timer');
+
+        // Timer variables
+        let timeLeft = 40 * 60; // 40 minutes in seconds
+        let timerInterval;
+        let allQuestionsAnswered = false;
+
+        // Initialize quiz
+        function initQuiz() {
+            // Clear previous content
+            quizContent.innerHTML = '';
+            
+            // Reset timer
+            timeLeft = 40 * 60;
+            updateTimerDisplay();
+            
+            // Start the timer
+            startTimer();
+            
+            // Create question elements
+            mcqData.forEach((questionData, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                
+                // Add category badge
+                const categoryBadge = document.createElement('span');
+                categoryBadge.className = `category-badge ${questionData.category.toLowerCase()}-badge`;
+                categoryBadge.textContent = questionData.category;
+                
+                questionNumber.textContent = `Question ${index + 1}: `;
+                questionNumber.appendChild(categoryBadge);
+                
+                const questionText = document.createElement('h5');
+                questionText.textContent = questionData.question;
+                
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                questionData.options.forEach((option, optionIndex) => {
+                    const label = document.createElement('label');
+                    
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `question-${index}`;
+                    input.value = optionIndex;
+                    
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(option));
+                    optionsDiv.appendChild(label);
+                });
+                
+                questionDiv.appendChild(questionNumber);
+                questionDiv.appendChild(questionText);
+                questionDiv.appendChild(optionsDiv);
+                quizContent.appendChild(questionDiv);
+            });
+            
+            // Reset progress bar
+            progressBar.style.width = '0%';
+            
+            // Hide score container and submit button
+            scoreContainer.style.display = 'none';
+            submitBtn.style.display = 'none';
+            allQuestionsAnswered = false;
+        }
+
+        // Start the timer
+        function startTimer() {
+            clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                // Check if time is up
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitBtn.style.display = 'block';
+                    submitBtn.click(); // Auto-submit when time is up
+                }
+                
+                // Check if all questions are answered
+                if (!allQuestionsAnswered) {
+                    const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+                    if (answeredQuestions === mcqData.length) {
+                        allQuestionsAnswered = true;
+                        submitBtn.style.display = 'block';
+                    }
+                }
+            }, 1000);
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Change color when time is running low
+            if (timeLeft < 5 * 60) { // Less than 5 minutes
+                timerElement.style.color = '#dc3545';
+            }
+        }
+
+        // Calculate score
+        function calculateScore() {
+            let score = 0;
+            
+            mcqData.forEach((questionData, index) => {
+                const selectedOption = document.querySelector(`input[name="question-${index}"]:checked`);
+                
+                if (selectedOption && parseInt(selectedOption.value) === questionData.correct) {
+                    score++;
+                    // Highlight correct answer
+                    selectedOption.parentElement.classList.add('correct');
+                } else {
+                    // Highlight incorrect answer and show correct one
+                    if (selectedOption) {
+                        selectedOption.parentElement.classList.add('incorrect');
+                    }
+                    
+                    // Show correct answer
+                    const correctOption = document.querySelector(`input[name="question-${index}"][value="${questionData.correct}"]`);
+                    if (correctOption) {
+                        correctOption.parentElement.classList.add('correct');
+                    }
+                }
+                
+                // Disable all inputs after submission
+                const options = document.querySelectorAll(`input[name="question-${index}"]`);
+                options.forEach(option => {
+                    option.disabled = true;
+                });
+            });
+            
+            return score;
+        }
+
+        // Show results
+        function showResults() {
+            // Stop the timer
+            clearInterval(timerInterval);
+            
+            const score = calculateScore();
+            scoreElement.textContent = score;
+            
+            // Set result message based on score
+            if (score >= 35) {
+                resultMessage.textContent = "Excellent! You have a strong understanding of web development fundamentals.";
+                resultMessage.style.color = "#28a745";
+            } else if (score >= 25) {
+                resultMessage.textContent = "Good job! You have a solid foundation in web development.";
+                resultMessage.style.color = "#ffc107";
+            } else if (score >= 15) {
+                resultMessage.textContent = "Not bad! Keep learning to improve your web development skills.";
+                resultMessage.style.color = "#fd7e14";
+            } else {
+                resultMessage.textContent = "Keep practicing! Review the basics of HTML, CSS, JavaScript, and Bootstrap.";
+                resultMessage.style.color = "#dc3545";
+            }
+            
+            // Show score container
+            scoreContainer.style.display = 'block';
+            submitBtn.style.display = 'none';
+            
+            // Scroll to results
+            scoreContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progress = (answeredQuestions / mcqData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Show submit button when all questions are answered
+            if (answeredQuestions === mcqData.length) {
+                submitBtn.style.display = 'block';
+                allQuestionsAnswered = true;
+            }
+        }
+
+        // Event Listeners
+        submitBtn.addEventListener('click', showResults);
+        
+        restartBtn.addEventListener('click', () => {
+            initQuiz();
+        });
+        
+        // Add event listeners to radio buttons for progress tracking
+        document.addEventListener('change', (e) => {
+            if (e.target.type === 'radio') {
+                updateProgressBar();
+            }
+        });
+
+        // Initialize the quiz when page loads
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
