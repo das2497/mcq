@@ -599,7 +599,7 @@
         const timerElement = document.getElementById('timer');
 
         // Timer variables
-        let timeLeft = 40 * 60; // 40 minutes in seconds
+        let timeLeft = 60 * 60; // 40 minutes in seconds
         let timerInterval;
         let allQuestionsAnswered = false;
 
@@ -609,7 +609,7 @@
             quizContent.innerHTML = '';
             
             // Reset timer
-            timeLeft = 40 * 60;
+            timeLeft = 60 * 60;
             updateTimerDisplay();
             
             // Start the timer
@@ -800,3 +800,4 @@
     </script>
 </body>
 </html>
+
